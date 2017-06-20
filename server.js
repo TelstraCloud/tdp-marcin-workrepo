@@ -76,6 +76,11 @@ app.get('/', function (req, res) {
   }
 });
 
+app.get('/tri', function (req, res) {
+
+  res.render('tri.html')
+});
+
 app.get('/pagecount', function (req, res) {
   // try to initialize the db on every request if it's not already
   // initialized.
