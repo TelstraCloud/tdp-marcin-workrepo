@@ -15,6 +15,11 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
     mongoURLLabel = "";
 
+// this is to get network and OS info
+var os = require( 'os' );
+var networkInterfaces = os.networkInterfaces( ); //this is an object
+var platformname = os.platform(); // this is a string
+
 if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) {
   var mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase(),
       mongoHost = process.env[mongoServiceName + '_SERVICE_HOST'],
@@ -78,7 +83,7 @@ app.get('/', function (req, res) {
 
 app.get('/tri', function (req, res) {
 
-  res.render('tri.html')
+  res.render('tri.html',{ pname : platformname, interfaces: networkInterfaces })
 });
 
 app.get('/pagecount', function (req, res) {

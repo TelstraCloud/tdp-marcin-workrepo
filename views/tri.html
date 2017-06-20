@@ -1,21 +1,61 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Pretty triangles</title>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Demo Info</title>
+    <style>
+    html, body {
+      margin: 0 0;
+      padding: 0 0;
+      text-align: center;
+     
+    }
+    </style>
+  </head>
+  <body>
+  	<h1>Demo Info</h1>
+  	<div id="mybox"></div>
+  	<div id="mybox2" style="height: 400px;">
+  		<h1>Details</h1>
+		<ul>
+			<li>Platform: <%=pname%></li>
+			<li>Network: <%=interfaces%></li>
+		</ul>
+	</div>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/1.0.1/trianglify.min.js"></script>
+  <script>
+  // set up the base pattern
+  var pattern = Trianglify({
+    height: 200,
+    width: 300,
+    cell_size: 30 + Math.random() * 100})
+  // canvas
+  var x = document.getElementById("mybox");
+  var mycanvas = x.appendChild(pattern.canvas());
+  // svg
+  
+//	x.appendChild(pattern.svg());
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/0.4.0/trianglify.min.js"></script>
-<script>
-    var pattern = Trianglify({
-        width: 600,
-        height: 400
-    });
-    document.body.appendChild(pattern.canvas())
-</script> 
-</head>
-<body>
-	<h1>Triangles go here</h1>
-</body>
+//var canvas = document.getElementById("mycanvas");
+var ctx = mycanvas.getContext("2d");
+ctx.font = "30px Arial";
+ctx.strokeText("Info:",10,50); 
+
+	//var y = document.getElementById("mybox2");
+	// 	y.style.backgroundImage="url("+pattern.png()+")" ;
+//
+
+
+
+
+  //document.body.appendChild(pattern.svg())
+  // png
+  //var png = document.createElement('img')
+  //png.src = pattern.png()
+  //document.body.appendChild(png)
+  </script>
+  </body>
 </html>
