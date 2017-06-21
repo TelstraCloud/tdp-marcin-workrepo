@@ -15,6 +15,8 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
     mongoURLLabel = "";
 
+var environment = process.env;    
+
 // this is to get network and OS info
 var os = require( 'os' );
 var networkInterfaces = os.networkInterfaces( ); //this is an object
@@ -119,6 +121,7 @@ app.get('/tri', function (req, res) {
   
   var primesdata = calcPrimes(n);
   res.render('tri.html', { 
+                environment: environment,
                 pname : platformname, 
                 interfaces: networkInterfaces, 
                 totalPrimes: primesdata.countPrimes, 
