@@ -121,7 +121,6 @@ app.get('/tri', function (req, res) {
   
   var primesdata = calcPrimes(n);
   res.render('tri.html', { 
-                environment: environment,
                 pname : platformname, 
                 interfaces: networkInterfaces, 
                 totalPrimes: primesdata.countPrimes, 
