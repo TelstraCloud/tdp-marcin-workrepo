@@ -63,6 +63,37 @@ var initDb = function(callback) {
   });
 };
 
+var calcPrimes = function(n) {
+  var t1 = Date.now();
+  //var n = 50000000;  //find primes up to n
+  var upperbound = Math.floor(Math.sqrt(n)) + 1 ;
+
+  var A = []; //this is all the numbers from 2..n
+
+  for (k = 2; k <= n; k++) {
+      A[k] = true;
+  } 
+
+  for (i = 2; i < upperbound; i++ ) {
+    if (A[i] === true) {
+      for (j = i*i; j <= n; j = j + i) {
+        A[j] = false;
+      }
+    }
+  }
+
+  var countprimes = 0;
+
+    for (k = 2; k <= n; k++) {
+      if (A[k] === true) {
+        countprimes++;
+      }
+  } 
+  var totalt = Date.now() - t1;
+
+  return { countPrimes:countprimes,totalTime:totalt};
+}
+
 app.get('/', function (req, res) {
   // try to initialize the db on every request if it's not already
   // initialized.
@@ -82,8 +113,14 @@ app.get('/', function (req, res) {
 });
 
 app.get('/tri', function (req, res) {
-
-  res.render('tri.html',{ pname : platformname, interfaces: networkInterfaces })
+  var n = 1000000;
+  var primesdata = calcPrimes(n);
+  res.render('tri.html', { 
+                pname : platformname, 
+                interfaces: networkInterfaces, 
+                totalPrimes: primesdata.countPrimes, 
+                totalTime: primesdata.totalTime,
+                n: n })
 });
 
 app.get('/pagecount', function (req, res) {

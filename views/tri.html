@@ -10,7 +10,7 @@
     html, body {
       margin: 0 0;
       padding: 0 0;
-      text-align: center;
+      
      
     }
     </style>
@@ -24,6 +24,15 @@
 			<li>Platform: <%=pname%></li>
 			<li>Network: <%=JSON.stringify(interfaces)%></li>
 		</ul>
+		
+		<h2>Find primes up to <%=n%></h2>
+		<h2>Time taken</h2>
+		<p id="timetaken"><%=totalTime%></p>
+		<h2>How many primes:</h2>
+		<p id="primecount"><%=totalPrimes%></p>
+		<!--<h2>Prime numbers</h2>
+		<p id="primes"></p>-->
+		
 	</div>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/1.0.1/trianglify.min.js"></script>
   <script>
@@ -46,16 +55,70 @@ ctx.strokeText("Info:",10,50);
 
 	//var y = document.getElementById("mybox2");
 	// 	y.style.backgroundImage="url("+pattern.png()+")" ;
-//
-
-
-
-
   //document.body.appendChild(pattern.svg())
   // png
   //var png = document.createElement('img')
   //png.src = pattern.png()
   //document.body.appendChild(png)
+
+
+
+// run the seive
+/*
+Let A be an array of Boolean values, indexed by integers 2 to n,
+ initially all set to true.
+ 
+ for i = 2, 3, 4, ..., not exceeding √n:
+   if A[i] is true:
+     for j = i2, i2+i, i2+2i, i2+3i, ..., not exceeding n:
+       A[j] := false.
+ 
+ Output: all i such that A[i] is true.
+*/
+
+/*
+
+	var t1 = Date.now();
+	var n = 50000000;  //find primes up to n
+	var upperbound = Math.floor(Math.sqrt(n)) + 1 ;
+
+	var A = []; //this is all the numbers from 2..n
+
+	for (k = 2; k <= n; k++) {
+	    A[k] = true;
+	} 
+
+	for (i = 2; i < upperbound; i++ ) {
+		if (A[i] === true) {
+			for (j = i*i; j <= n; j = j + i) {
+				A[j] = false;
+			}
+		}
+	}
+
+	var myprimes = document.getElementById("primes");
+
+  	var primesstring = "> ";
+  	myprimes.innerHTML = primesstring;
+  	var countprimes = 0;
+
+  	for (k = 2; k <= n; k++) {
+	    if (A[k] === true) {
+	    	//primesstring = primesstring + k + " ";  //uncomment if we want to print the numbers out - adds about 25% overhead to cycle
+	    	countprimes++;
+
+	    }
+	} 
+	var totalt = Date.now() - t1;
+	//myprimes.innerHTML = primesstring;  //uncomment if we want to print the numbers out
+
+	
+	var mytime = document.getElementById("timetaken");
+  	mytime.innerHTML = "= " + totalt + "ms";
+
+  	var mycount = document.getElementById("primecount");
+  	mycount.innerHTML = "> " + countprimes + "prime numbers up to " + n;
+*/
   </script>
   </body>
 </html>
