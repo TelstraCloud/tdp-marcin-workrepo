@@ -113,7 +113,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/tri', function (req, res) {
-  var n = 1000000;
+  var n = 5000000;
   var primesdata = calcPrimes(n);
   res.render('tri.html', { 
                 pname : platformname, 
