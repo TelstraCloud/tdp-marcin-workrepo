@@ -22,8 +22,8 @@
   		<h1>Details</h1>
 		<ul>
 			<li>Platform: <%=pname%></li>
-			<li>Network: <%=JSON.stringify(interfaces)%></li>
-			
+			<!--<li>Network: <%=JSON.stringify(interfaces)%></li>-->
+			<li>Network: <%=interfaces.eth0[0].address%></li>
 		</ul>
 		
 		<h2>Find primes up to <%=n%></h2>
