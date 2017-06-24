@@ -29,7 +29,7 @@ if (!process.env.KUBERNETES_SERVICE_HOST || !process.env.KUBERNETES_SERVICE_PORT
   k8sHost = '54.153.181.249.nip.io';
   k8sPort = '8443';
   console.log('env KUBERNETES_SERVICE_HOST or KUBERNETES_SERVICE_PORT not set');
-  console.log(`using https://${k8sHost}:${k8sPort}`);
+  //console.log(`using https://${k8sHost}:${k8sPort}`);
 }
 console.log(`Will connect to cluster using https://${k8sHost}:${k8sPort}`);
 
@@ -38,6 +38,7 @@ var token = "";
 if (fs.existsSync('/var/run/secrets/kubernetes.io/serviceaccount/token')) {
    token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf8');
 }
+console.log("token: " + token);
 // this is to get network and OS info
 var os = require( 'os' );
 var networkInterfaces = os.networkInterfaces( ); //this is an object
@@ -146,11 +147,11 @@ app.get('/', function (req, res) {
   if (db) {
     var col = db.collection('counts');
     var k = getK8SInfo();
-    console.log(JSON.stringify(core));
+    console.log(JSON.stringify(k));
     // Create a document with request IP and current time of request
     col.insert({ip: req.ip, date: Date.now()});
     col.count(function(err, count){
-      res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails, k8s: k });
+      res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
     });
   } else {
     res.render('index.html', { pageCountMessage : null});
