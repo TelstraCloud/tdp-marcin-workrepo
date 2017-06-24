@@ -121,7 +121,7 @@ var calcPrimes = function(n) {
 
 var getK8SInfo = function() {
 // connect to the API server
-/*
+
   const core = new Api.Core({
     url: `https://${k8sHost}:${k8sPort}`,
     auth: {
@@ -132,8 +132,8 @@ var getK8SInfo = function() {
     namespace: 'marcin-proj',
   });
   //console.log('connecting to k8s api at ' + core.url);
-*/
-  const core = new Api.Core(Api.config.getInCluster());
+
+  //const core = new Api.Core(Api.config.getInCluster());
   console.log('core: ' + JSON.stringify(core))
 
 
