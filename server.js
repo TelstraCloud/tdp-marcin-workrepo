@@ -15,13 +15,34 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
     mongoURLLabel = "";
 
-var environment = process.env;    
+var environment = process.env;   
+
+// this is to get the k8s info
+const Api = require('kubernetes-client');
+const JSONStream = require('json-stream');
+const jsonStream = new JSONStream(); 
+const fs = require('fs');
+
+// determine the cluster host and port
+var k8sHost = process.env.KUBERNETES_SERVICE_HOST;
+var k8sPort = process.env.KUBERNETES_SERVICE_PORT;
+if (!process.env.KUBERNETES_SERVICE_HOST || !process.env.KUBERNETES_SERVICE_PORT) {
+  k8sHost = '54.153.181.249.nip.io';
+  k8sPort = '8443';
+  console.log('env KUBERNETES_SERVICE_HOST or KUBERNETES_SERVICE_PORT not set');
+  console.log(`using https://${k8sHost}:${k8sPort}`);
+}
+console.log(`Will connect to cluster using https://${k8sHost}:${k8sPort}`);
+
+// read the token from the service account
+var token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf8');
 
 // this is to get network and OS info
 var os = require( 'os' );
 var networkInterfaces = os.networkInterfaces( ); //this is an object
 var platformname = os.platform(); // this is a string
 
+// mongo connection details
 if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) {
   var mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase(),
       mongoHost = process.env[mongoServiceName + '_SERVICE_HOST'],
@@ -96,6 +117,25 @@ var calcPrimes = function(n) {
   return { countPrimes:countprimes,totalTime:totalt};
 }
 
+var getK8SInfo = function() {
+// connect to the API server
+/*
+  const core = new Api.Core({
+    url: `https://${k8sHost}:${k8sPort}`,
+    auth: {
+      bearer: token,
+    },
+    insecureSkipTlsVerify: true,
+    version: 'v1',
+    namespace: 'ds-policy-test',
+  });
+  console.log('connecting to k8s api at ' + core.url);
+*/
+//const Api = require('kubernetes-client');
+  const core = new Api.Core(Api.config.getInCluster());
+  return JSON.stringify(core);
+}
+
 app.get('/', function (req, res) {
   // try to initialize the db on every request if it's not already
   // initialized.
@@ -107,7 +147,7 @@ app.get('/', function (req, res) {
     // Create a document with request IP and current time of request
     col.insert({ip: req.ip, date: Date.now()});
     col.count(function(err, count){
-      res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
+      res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails, k8s: getK8SInfo() });
     });
   } else {
     res.render('index.html', { pageCountMessage : null});

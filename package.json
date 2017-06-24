@@ -1,7 +1,7 @@
 {
   "name": "nodejs-ex",
   "version": "0.0.1",
-  "description": "Node.js sample app for OpenShift 3",
+  "description": "Node.js sample app for TDP demo",
   "main": "server.js",
   "dependencies": {
     "chai": "^3.5.0",
@@ -11,7 +11,9 @@
     "mocha": "^2.4.5",
     "mongodb": "^2.1.16",
     "morgan": "^1.7.0",
-    "object-assign":"4.1.0"
+    "object-assign":"4.1.0",
+    "json-stream": "^1.0.0",
+    "kubernetes-client": "^3.11.0"
   },
   "engine": {
     "node": "*",
@@ -25,7 +27,7 @@
     "type": "git",
     "url": "http://github.com/openshift/nodejs-ex.git"
   },
-  "author": "Steve Speicher <sspeiche@gmail.com>",
+  "author": "Marcin Coles",
   "license": "CC-BY-1.0",
   "bugs": {
     "url": "http://github.com/openshift/nodejs-ex/issues"
