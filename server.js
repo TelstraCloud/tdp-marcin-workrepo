@@ -25,12 +25,15 @@ const jsonStream = new JSONStream();
 // determine the cluster host and port
 var k8sHost = process.env.KUBERNETES_SERVICE_HOST;
 var k8sPort = process.env.KUBERNETES_SERVICE_PORT;
-if (!process.env.KUBERNETES_SERVICE_HOST || !process.env.KUBERNETES_SERVICE_PORT) {
+/*if (!process.env.KUBERNETES_SERVICE_HOST || !process.env.KUBERNETES_SERVICE_PORT) {
   k8sHost = '54.153.181.249.nip.io';
   k8sPort = '8443';
   console.log('env KUBERNETES_SERVICE_HOST or KUBERNETES_SERVICE_PORT not set');
   //console.log(`using https://${k8sHost}:${k8sPort}`);
-}
+}*/
+
+k8sHost = '54.153.181.249.nip.io';
+  k8sPort = '8443';
 console.log(`Will connect to cluster using https://${k8sHost}:${k8sPort}`);
 
 // read the token from the service account
@@ -129,7 +132,7 @@ var getK8SInfo = function() {
     },
     insecureSkipTlsVerify: true,
     version: 'v1',
-    //namespace: 'marcin-proj',
+    namespace: 'marcin-proj'
   });
   //console.log('connecting to k8s api at ' + core.url);
 
