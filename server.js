@@ -135,7 +135,7 @@ var getK8SInfo = function() {
 
 //const Api = require('kubernetes-client');
   //const core = new Api.Core(Api.config.getInCluster());
-  console log('core: ' + JSON.stringify(core))
+  console.log('core: ' + JSON.stringify(core))
   return JSON.stringify(core);
 }
 
