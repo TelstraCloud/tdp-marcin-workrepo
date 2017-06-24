@@ -37,8 +37,8 @@
   <script>
   // set up the base pattern
   var pattern = Trianglify({
-    height: 300,
-    width: 450,
+    height: window.innerHeight,
+    width: window.innerWidth,
     x_colors: 'Blues',
     cell_size: 30 + Math.random() * 100})
   	// canvas
@@ -46,17 +46,37 @@
   	var mycanvas = x.appendChild(pattern.canvas());
   
 	var ctx = mycanvas.getContext("2d");
+
+	var radius = 100;
+	ctx.arc(mycanvas.width/2, mycanvas.height/2, radius, 0 , 2*Math.PI);
+	ctx.closePath();
+    ctx.fillStyle = "black";
+    ctx.fill();
+	
+
 	ctx.font = "50px Arial";
 	ctx.fillStyle = "white";
 	ctx.textAlign = "center";
+	ctx.textBaseline="middle"; 
 	ctx.fillText("AZ1", mycanvas.width/2, mycanvas.height/2); 
 
 	//put in the IP address
 	ctx.font = "18px Arial";
 	ctx.fillStyle = "white";
 	ctx.textAlign = "left";
-	ctx.fillText("Network: <%-interfaces.eth0[0].address%>", 10, mycanvas.height-25); 
+	ctx.fillText("IP: <%-interfaces.eth0[0].address%>", 10, mycanvas.height-55); 
 			
+	//load info
+	var loadinfo = "Found <%- totalPrimes%> between 1 and <%-n%> in <%-totalTime%> ms";
+	ctx.fillText(loadinfo, 10, mycanvas.height-25); 
+
+	/*
+	<h2>Find primes up to <%=n%></h2>
+		<h2>Time taken</h2>
+		<p id="timetaken"><%=totalTime%> ms</p>
+		<h2>How many primes:</h2>
+		<p id="primecount"><%=totalPrimes%></p>
+	*/
 
 	//var y = document.getElementById("mybox2");
 	// 	y.style.backgroundImage="url("+pattern.png()+")" ;
