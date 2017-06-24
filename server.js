@@ -129,13 +129,18 @@ var getK8SInfo = function() {
     },
     insecureSkipTlsVerify: true,
     version: 'v1',
-    namespace: 'ds-policy-test',
+    namespace: 'marcin-proj',
   });
   //console.log('connecting to k8s api at ' + core.url);
 
 //const Api = require('kubernetes-client');
   //const core = new Api.Core(Api.config.getInCluster());
   console.log('core: ' + JSON.stringify(core))
+
+
+  core.namespaces.pods.get(function (err, result) {
+    console.log("pods: " + JSON.stringify(err || result, null, 2));
+  });
   return JSON.stringify(core);
 }
 
