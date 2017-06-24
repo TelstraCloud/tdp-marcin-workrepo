@@ -38,7 +38,7 @@ var token = "";
 if (fs.existsSync('/var/run/secrets/kubernetes.io/serviceaccount/token')) {
    token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf8');
 }
-console.log("token: " + token);
+//console.log("token: " + token);
 // this is to get network and OS info
 var os = require( 'os' );
 var networkInterfaces = os.networkInterfaces( ); //this is an object
@@ -131,10 +131,11 @@ var getK8SInfo = function() {
     version: 'v1',
     namespace: 'ds-policy-test',
   });
-  console.log('connecting to k8s api at ' + core.url);
+  //console.log('connecting to k8s api at ' + core.url);
 
 //const Api = require('kubernetes-client');
   //const core = new Api.Core(Api.config.getInCluster());
+  console log('core: ' + JSON.stringify(core))
   return JSON.stringify(core);
 }
 
@@ -147,7 +148,7 @@ app.get('/', function (req, res) {
   if (db) {
     var col = db.collection('counts');
     var k = getK8SInfo();
-    console.log(JSON.stringify(k));
+    console.log('k = ' + JSON.stringify(k));
     // Create a document with request IP and current time of request
     col.insert({ip: req.ip, date: Date.now()});
     col.count(function(err, count){
