@@ -34,8 +34,10 @@ if (!process.env.KUBERNETES_SERVICE_HOST || !process.env.KUBERNETES_SERVICE_PORT
 console.log(`Will connect to cluster using https://${k8sHost}:${k8sPort}`);
 
 // read the token from the service account
-var token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf8');
-
+var token = "";
+if fs.existsSync('/var/run/secrets/kubernetes.io/serviceaccount/token') {
+   token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf8');
+}
 // this is to get network and OS info
 var os = require( 'os' );
 var networkInterfaces = os.networkInterfaces( ); //this is an object
@@ -118,7 +120,7 @@ var calcPrimes = function(n) {
 
 var getK8SInfo = function() {
 // connect to the API server
-/*
+
   const core = new Api.Core({
     url: `https://${k8sHost}:${k8sPort}`,
     auth: {
@@ -129,9 +131,9 @@ var getK8SInfo = function() {
     namespace: 'ds-policy-test',
   });
   console.log('connecting to k8s api at ' + core.url);
-*/
+
 //const Api = require('kubernetes-client');
-  const core = new Api.Core(Api.config.getInCluster());
+  //const core = new Api.Core(Api.config.getInCluster());
   return JSON.stringify(core);
 }
 
