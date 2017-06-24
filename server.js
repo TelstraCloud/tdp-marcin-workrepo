@@ -129,7 +129,7 @@ var getK8SInfo = function() {
     },
     insecureSkipTlsVerify: true,
     version: 'v1',
-    namespace: 'marcin-proj',
+    //namespace: 'marcin-proj',
   });
   //console.log('connecting to k8s api at ' + core.url);
 
