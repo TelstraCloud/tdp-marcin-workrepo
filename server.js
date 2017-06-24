@@ -21,7 +21,6 @@ var environment = process.env;
 const Api = require('kubernetes-client');
 const JSONStream = require('json-stream');
 const jsonStream = new JSONStream(); 
-const fs = require('fs');
 
 // determine the cluster host and port
 var k8sHost = process.env.KUBERNETES_SERVICE_HOST;
