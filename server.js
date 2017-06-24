@@ -121,7 +121,7 @@ var calcPrimes = function(n) {
 
 var getK8SInfo = function() {
 // connect to the API server
-
+/*
   const core = new Api.Core({
     url: `https://${k8sHost}:${k8sPort}`,
     auth: {
@@ -132,13 +132,15 @@ var getK8SInfo = function() {
     namespace: 'marcin-proj',
   });
   //console.log('connecting to k8s api at ' + core.url);
-
-//const Api = require('kubernetes-client');
-  //const core = new Api.Core(Api.config.getInCluster());
+*/
+  const core = new Api.Core(Api.config.getInCluster());
   console.log('core: ' + JSON.stringify(core))
 
 
   core.namespaces.pods.get(function (err, result) {
+    if (err) {
+      console.log("error getting pods: " + err)
+    }
     console.log("pods: " + JSON.stringify(err || result, null, 2));
   });
   return JSON.stringify(core);
@@ -153,7 +155,7 @@ app.get('/', function (req, res) {
   if (db) {
     var col = db.collection('counts');
     var k = getK8SInfo();
-    console.log('k = ' + JSON.stringify(k));
+    //console.log('k = ' + JSON.stringify(k));
     // Create a document with request IP and current time of request
     col.insert({ip: req.ip, date: Date.now()});
     col.count(function(err, count){
