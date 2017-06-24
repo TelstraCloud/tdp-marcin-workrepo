@@ -41,6 +41,11 @@ var token = "";
 if (fs.existsSync('/var/run/secrets/kubernetes.io/serviceaccount/token')) {
    token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf8');
 }
+var namespace = "";
+if (fs.existsSync('/var/run/secrets/kubernetes.io/serviceaccount/namespace')) {
+   namespace = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/namespace', 'utf8');
+}
+
 //console.log("token: " + token);
 // this is to get network and OS info
 var os = require( 'os' );
@@ -132,7 +137,7 @@ var getK8SInfo = function() {
     },
     insecureSkipTlsVerify: true,
     version: 'v1',
-    namespace: 'marcin-proj'
+    namespace: namespace
   });
   //console.log('connecting to k8s api at ' + core.url);
 
