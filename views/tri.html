@@ -16,15 +16,13 @@
     </style>
   </head>
   <body>
-  	<h1>Demo Info</h1>
-  	<div id="mybox"></div>
+  	<div id="mybox">
+			<!--<ul><li>Platform: <%=pname%></li>
+			<li>Network: <%=interfaces.eth0[0].address%></li></ul>-->
+		</div>
   	<div id="mybox2" style="height: 400px;">
   		<h1>Details</h1>
-		<ul>
-			<li>Platform: <%=pname%></li>
-			<!--<li>Network: <%=JSON.stringify(interfaces)%></li>-->
-			<li>Network: <%=interfaces.eth0[0].address%></li>
-		</ul>
+		
 		
 		<h2>Find primes up to <%=n%></h2>
 		<h2>Time taken</h2>
@@ -39,20 +37,26 @@
   <script>
   // set up the base pattern
   var pattern = Trianglify({
-    height: 200,
-    width: 300,
+    height: 300,
+    width: 450,
+    x_colors: 'Blues',
     cell_size: 30 + Math.random() * 100})
-  // canvas
-  var x = document.getElementById("mybox");
-  var mycanvas = x.appendChild(pattern.canvas());
-  // svg
+  	// canvas
+  	var x = document.getElementById("mybox");
+  	var mycanvas = x.appendChild(pattern.canvas());
   
-//	x.appendChild(pattern.svg());
+	var ctx = mycanvas.getContext("2d");
+	ctx.font = "50px Arial";
+	ctx.fillStyle = "white";
+	ctx.textAlign = "center";
+	ctx.fillText("AZ1", mycanvas.width/2, mycanvas.height/2); 
 
-//var canvas = document.getElementById("mycanvas");
-var ctx = mycanvas.getContext("2d");
-ctx.font = "30px Arial";
-ctx.strokeText("Info:",10,50); 
+	//put in the IP address
+	ctx.font = "18px Arial";
+	ctx.fillStyle = "white";
+	ctx.textAlign = "left";
+	ctx.fillText("Network: <%-interfaces.eth0[0].address%>", 10, mycanvas.height-25); 
+			
 
 	//var y = document.getElementById("mybox2");
 	// 	y.style.backgroundImage="url("+pattern.png()+")" ;
@@ -63,63 +67,6 @@ ctx.strokeText("Info:",10,50);
   //document.body.appendChild(png)
 
 
-
-// run the seive
-/*
-Let A be an array of Boolean values, indexed by integers 2 to n,
- initially all set to true.
- 
- for i = 2, 3, 4, ..., not exceeding √n:
-   if A[i] is true:
-     for j = i2, i2+i, i2+2i, i2+3i, ..., not exceeding n:
-       A[j] := false.
- 
- Output: all i such that A[i] is true.
-*/
-
-/*
-
-	var t1 = Date.now();
-	var n = 50000000;  //find primes up to n
-	var upperbound = Math.floor(Math.sqrt(n)) + 1 ;
-
-	var A = []; //this is all the numbers from 2..n
-
-	for (k = 2; k <= n; k++) {
-	    A[k] = true;
-	} 
-
-	for (i = 2; i < upperbound; i++ ) {
-		if (A[i] === true) {
-			for (j = i*i; j <= n; j = j + i) {
-				A[j] = false;
-			}
-		}
-	}
-
-	var myprimes = document.getElementById("primes");
-
-  	var primesstring = "> ";
-  	myprimes.innerHTML = primesstring;
-  	var countprimes = 0;
-
-  	for (k = 2; k <= n; k++) {
-	    if (A[k] === true) {
-	    	//primesstring = primesstring + k + " ";  //uncomment if we want to print the numbers out - adds about 25% overhead to cycle
-	    	countprimes++;
-
-	    }
-	} 
-	var totalt = Date.now() - t1;
-	//myprimes.innerHTML = primesstring;  //uncomment if we want to print the numbers out
-
-	
-	var mytime = document.getElementById("timetaken");
-  	mytime.innerHTML = "= " + totalt + "ms";
-
-  	var mycount = document.getElementById("primecount");
-  	mycount.innerHTML = "> " + countprimes + "prime numbers up to " + n;
-*/
   </script>
   </body>
 </html>

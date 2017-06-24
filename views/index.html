@@ -212,6 +212,12 @@ pre {
 <section class='container'>
           <hgroup>
             <h1>Welcome to your Node.js application on OpenShift</h1>
+            <button onclick="myFunction()">Primes &lt; 1M </button>
+			<script>
+			function myFunction() {
+			    window.open("/tri?num=1000000", "_blank", "toolbar=no,scrollbars=no,resizable=yes,top=200,left=200,width=450,height=400");
+			}
+			</script>
            <p>Prime counter for primes up to <a href="/tri?num=1000000">1 million</a>
            <p>Prime counter for primes up to <a href="/tri?num=3000000">3 million</a>
            </p>
