@@ -47,11 +47,17 @@
   
 	var ctx = mycanvas.getContext("2d");
 
+	ctx.strokeStyle="#CCCCCC";
 	var radius = 100;
+	ctx.beginPath();
+	ctx.lineWidth=3;
 	ctx.arc(mycanvas.width/2, mycanvas.height/2, radius, 0 , 2*Math.PI);
-	ctx.closePath();
-    ctx.fillStyle = "black";
-    ctx.fill();
+	ctx.stroke();
+	radius = 92;
+	ctx.beginPath();
+	ctx.lineWidth=3;
+	ctx.arc(mycanvas.width/2, mycanvas.height/2, radius, 0 , 2*Math.PI);
+	ctx.stroke();
 	
 
 	ctx.font = "50px Arial";
@@ -67,7 +73,7 @@
 	ctx.fillText("IP: <%-interfaces.eth0[0].address%>", 10, mycanvas.height-55); 
 			
 	//load info
-	var loadinfo = "Found <%- totalPrimes%> between 1 and <%-n%> in <%-totalTime%> ms";
+	var loadinfo = "Found <%-totalPrimes%> primes in <%-totalTime%>ms";
 	ctx.fillText(loadinfo, 10, mycanvas.height-25); 
 
 	/*
