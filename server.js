@@ -38,8 +38,16 @@ console.log(`Will connect to cluster using https://${k8sHost}:${k8sPort}`);
 
 // read the token from the service account
 var token = "";
-if (fs.existsSync('/var/run/secrets/kubernetes.io/serviceaccount/token')) {
-   token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf8');
+if (process.env.MYTOKEN) {
+  token = process.env.MYTOKEN;
+  console.log('Kubes: Using MYTOKEN');
+} else  {
+  if (fs.existsSync('/var/run/secrets/kubernetes.io/serviceaccount/token')) {
+     token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf8');
+     console.log('Kubes: Using serviceaccount/token');
+  } else {
+      console.log('ERROR: Kubes no token')
+  }
 }
 var namespace = "";
 if (fs.existsSync('/var/run/secrets/kubernetes.io/serviceaccount/namespace')) {
