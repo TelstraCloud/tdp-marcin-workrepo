@@ -250,7 +250,7 @@ app.get('/setprime', function (req, res) {
     col.insert({date: Date.now(), n});
 
     col.find().sort({date:-1}).limit(10).toArray(function(err, docs) {
-      if (err) { console.log("db error: " + err); res.send('{"primes" : 0}');}
+      if (err) { console.log("db error: " + err); res.send('[]');}
       console.log("docs: " + JSON.stringify(docs,null,4));
        
       res.send(JSON.stringify(docs,null,4));
@@ -261,7 +261,38 @@ app.get('/setprime', function (req, res) {
     //});
     
   } else {
-    res.send('{"primes" : 0}');
+    res.send('[]');
+  }
+
+});
+
+app.get('/getprimes', function (req, res) {
+  //returns last n prime numbers
+  var requested_n = req.query.count;
+  var n = 5;
+  if (requested_n) { n = parseInt(requested_n)}
+
+  if (!db) {
+    initDb(function(err){});
+  }
+  if (db) {
+    var col = db.collection('primes');
+    
+    col.find().sort({date:-1}).limit(n).toArray(function(err, docs) {
+      if (err) { console.log("db error: " + err); res.send('[]');}
+      console.log("docs: " + JSON.stringify(docs,null,4));
+      var arr;
+      for (i=0;i<docs.length;i++) {arr.push(docs[i].n)}
+       
+      res.send(JSON.stringify(arr,null,4));
+    });
+    
+    //col.count(function(err, count){
+    //  res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
+    //});
+    
+  } else {
+    res.send('[]');
   }
 
 });
