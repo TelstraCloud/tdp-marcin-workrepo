@@ -251,13 +251,16 @@ app.get('/setprime', function (req, res) {
 
     var lastprimes;
     col.find().sort({date:-1}).limit(10).toArray(function(err, docs) {
-      lastprimes = docs;  
+      if (err) { console.log("db error: " + err); res.send('{"primes" : 0}');}
+      console.log("docs: " + JSON.stringify(docs,null,4));
+       
+      res.send(JSON.stringify(docs,null,4));
     });
-    console.log("lastprimes: " + JSON.stringify(lastprimes,null,4));
+    
     //col.count(function(err, count){
     //  res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
     //});
-    res.send(JSON.stringify(lastprimes,null,4));
+    
   } else {
     res.send('{"primes" : 0}');
   }
