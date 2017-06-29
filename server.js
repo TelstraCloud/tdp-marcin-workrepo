@@ -135,6 +135,7 @@ var calcPrimes = function(n) {
   return { countPrimes:countprimes,totalTime:totalt};
 }
 
+/*
 function getK8SInfo() {
 // connect to the API server
 
@@ -150,7 +151,7 @@ function getK8SInfo() {
   //console.log('connecting to k8s api at ' + core.url);
 
   //const core = new Api.Core(Api.config.getInCluster());
-  console.log('core: ' + JSON.stringify(core))
+  console.log('core: ' + JSON.stringify(core));
 
 
   core.namespaces.pods.get(function (err, result) {
@@ -164,6 +165,7 @@ function getK8SInfo() {
       
     }
 }
+*/
 
 app.get('/', function (req, res) {
   // try to initialize the db on every request if it's not already
