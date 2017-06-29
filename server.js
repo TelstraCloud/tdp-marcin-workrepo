@@ -62,7 +62,7 @@ var platformname = os.platform(); // this is a string
 
 // mongo connection details
 if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) {
-  var mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase(),
+  var mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase().replace(/-/g,'_'),
       mongoHost = process.env[mongoServiceName + '_SERVICE_HOST'],
       mongoPort = process.env[mongoServiceName + '_SERVICE_PORT'],
       mongoDatabase = process.env[mongoServiceName + '_DATABASE'],
@@ -156,10 +156,15 @@ var getK8SInfo = function() {
   core.namespaces.pods.get(function (err, result) {
     if (err) {
       console.log("error getting pods: " + err)
+      return JSON.stringify(err);
     }
     console.log("pods: " + JSON.stringify(err || result, null, 2));
+    
+    return JSON.stringify(result);
+      
+    }
   });
-  return JSON.stringify(core);
+  
 }
 
 app.get('/', function (req, res) {
