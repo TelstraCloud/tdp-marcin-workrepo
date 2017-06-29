@@ -249,16 +249,13 @@ app.get('/setprime', function (req, res) {
     // Create a document with rcurrent time of request and the prime number
     col.insert({date: Date.now(), n});
 
-    col.find().sort({date:-1}).limit(10).toArray(function(err, docs) {
+    col.find().sort({date:-1}).limit(5).toArray(function(err, docs) {
       if (err) { console.log("db error: " + err); res.send('[]');}
       console.log("docs: " + JSON.stringify(docs,null,4));
        
       res.send(JSON.stringify(docs,null,4));
     });
     
-    //col.count(function(err, count){
-    //  res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
-    //});
     
   } else {
     res.send('[]');
