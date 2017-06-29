@@ -12,8 +12,7 @@
     "mongodb": "^2.1.16",
     "morgan": "^1.7.0",
     "object-assign":"4.1.0",
-    "json-stream": "^1.0.0",
-    "kubernetes-client": "^3.11.0"
+    "request": "*"
   },
   "engine": {
     "node": "*",

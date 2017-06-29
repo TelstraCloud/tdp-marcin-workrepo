@@ -3,6 +3,7 @@ var express = require('express'),
     fs      = require('fs'),
     app     = express(),
     eps     = require('ejs'),
+    request = require('request'),
     morgan  = require('morgan');
     
 Object.assign=require('object-assign')
@@ -17,44 +18,91 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
 
 var environment = process.env;   
 
-// this is to get the k8s info
-const Api = require('kubernetes-client');
-const JSONStream = require('json-stream');
-const jsonStream = new JSONStream(); 
+var test_output_global;
 
-// determine the cluster host and port
-var k8sHost = process.env.KUBERNETES_SERVICE_HOST;
-var k8sPort = process.env.KUBERNETES_SERVICE_PORT;
-/*if (!process.env.KUBERNETES_SERVICE_HOST || !process.env.KUBERNETES_SERVICE_PORT) {
-  k8sHost = '54.153.181.249.nip.io';
-  k8sPort = '8443';
-  console.log('env KUBERNETES_SERVICE_HOST or KUBERNETES_SERVICE_PORT not set');
-  //console.log(`using https://${k8sHost}:${k8sPort}`);
-}*/
+const nodeMap = {
+  "ip-172-31-32-19.ap-southeast-2.compute.internal" : "DC1",
+  "ip-172-31-33-133.ap-southeast-2.compute.internal": "AZ1",
+  "ip-172-31-38-70.ap-southeast-2.compute.internal" : "AZ2",
+  "ip-172-31-42-224.ap-southeast-2.compute.internal": "DC2"
+};
 
-k8sHost = '54.153.181.249.nip.io';
-  k8sPort = '8443';
-console.log(`Will connect to cluster using https://${k8sHost}:${k8sPort}`);
+var myDetails; // = getMyDetails();
 
-// read the token from the service account
-var token = "";
-if (process.env.MYTOKEN) {
-  token = process.env.MYTOKEN;
-  console.log('Kubes: Using MYTOKEN');
-} else  {
-  if (fs.existsSync('/var/run/secrets/kubernetes.io/serviceaccount/token')) {
-     token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf8');
-     console.log('Kubes: Using serviceaccount/token');
-  } else {
-      console.log('ERROR: Kubes no token')
-  }
+function getMyDetails() {
+  var project_namespace = process.env.OPENSHIFT_BUILD_NAMESPACE;
+  var hostname = process.env.HOSTNAME;
+
+  if (hostname && project_namespace) {
+    var url = `http://tdp-api-tdp.54.153.181.249.nip.io/projects/${project_namespace}/pods`;
+    console.log("getting TDP API at: " + url);
+    var project_info;
+
+    request(url, function(err,res,body){
+      if (res.statusCode === 200) {
+            project_info = body;
+            //console.log("project_info: " + project_info);
+
+            var project = JSON.parse(project_info);
+            var pod;
+
+            for (i=0; i<project.pods.length; i++){
+              if (project.pods[i].metadata.name === hostname) {
+                pod = project.pods[i];
+                break;
+              }
+            };
+            if (!pod) { return defaultDetails();};
+
+            var node = pod.spec.nodeName;
+
+            var output = {
+              zone: nodeMap[node],
+              node: node,
+              hostname: hostname,
+              project: project_namespace
+            };
+
+            console.log("output:\n" + JSON.stringify(output,null,4) );
+            myDetails = output; //lets make it global
+            return;// output;
+
+      } else {
+        console.log("error retreiving TDP-API info: " + err);
+        console.log("response status code: " + res.statusCode)
+        return defaultDetails();
+      }
+    });
+
+  };
+
+  if (! (hostname && project_namespace /*&& project_info*/)) {
+    // then something went wrong so we need to make up data
+    console.log("something went wrong getting project_info OR ENV vars not set")
+    return defaultDetails();
+  };
+
+  
+
+}; //end getMyDetails()
+
+function defaultDetails() {
+  // this is what we send back if there's no pod info or we can't connect to the API or can't find env vars
+  myDetails =  {
+    zone: "UNK",
+    node: "unknown node",
+    hostname: "unknown host",
+    project: "unknown project"
+  };
+  return;
 }
-var namespace = "";
-if (fs.existsSync('/var/run/secrets/kubernetes.io/serviceaccount/namespace')) {
-   namespace = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/namespace', 'utf8');
-}
 
-//console.log("token: " + token);
+getMyDetails();
+
+
+console.log("myDetails:\n " + JSON.stringify(myDetails,null,4));
+
+
 // this is to get network and OS info
 var os = require( 'os' );
 var networkInterfaces = os.networkInterfaces( ); //this is an object
@@ -135,37 +183,7 @@ var calcPrimes = function(n) {
   return { countPrimes:countprimes,totalTime:totalt};
 }
 
-/*
-function getK8SInfo() {
-// connect to the API server
 
-  const core = new Api.Core({
-    url: `https://${k8sHost}:${k8sPort}`,
-    auth: {
-      bearer: token,
-    },
-    insecureSkipTlsVerify: true,
-    version: 'v1',
-    namespace: namespace
-  });
-  //console.log('connecting to k8s api at ' + core.url);
-
-  //const core = new Api.Core(Api.config.getInCluster());
-  console.log('core: ' + JSON.stringify(core));
-
-
-  core.namespaces.pods.get(function (err, result) {
-    if (err) {
-      console.log("error getting pods: " + err)
-      return JSON.stringify(err);
-    }
-    console.log("pods: " + JSON.stringify(err || result, null, 2));
-    
-    return JSON.stringify(result);
-      
-    }
-}
-*/
 
 app.get('/', function (req, res) {
   // try to initialize the db on every request if it's not already
@@ -175,8 +193,7 @@ app.get('/', function (req, res) {
   }
   if (db) {
     var col = db.collection('counts');
-    //var k = getK8SInfo();
-    //console.log('k = ' + JSON.stringify(k));
+    
     // Create a document with request IP and current time of request
     col.insert({ip: req.ip, date: Date.now()});
     col.count(function(err, count){
@@ -198,6 +215,7 @@ app.get('/tri', function (req, res) {
                 interfaces: networkInterfaces, 
                 totalPrimes: primesdata.countPrimes, 
                 totalTime: primesdata.totalTime,
+                details: myDetails,
                 n: n })
 });
 
