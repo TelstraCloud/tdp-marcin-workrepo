@@ -234,6 +234,45 @@ app.get('/pagecount', function (req, res) {
   }
 });
 
+
+app.get('/setprime', function (req, res) {
+  var requested_n = req.query.num;
+  var n = 3;
+  if (requested_n) { n = parseInt(requested_n)}
+
+  if (!db) {
+    initDb(function(err){});
+  }
+  if (db) {
+    var col = db.collection('primes');
+    
+    // Create a document with request IP and current time of request
+    col.insert({date: Date.now(), n});
+
+    var lastprimes = col.find().sort({date:-1}).limit(10);
+    console.log("lastprimes: "+ JSON.stringify(lastprimes,null,4));
+    //col.count(function(err, count){
+    //  res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
+    //});
+    res.send(JSON.stringify(lastprimes,null,4));
+  } else {
+    res.send('{"primes" : 0}');
+  }
+
+
+  if (!db) {
+    initDb(function(err){});
+  }
+  if (db) {
+    db.collection('counts').count(function(err, count ){
+      res.send('{"pageCount": ' + count + '}');
+    });
+  } else {
+    res.send('{"pageCount": -1 }');
+  }
+});
+
+
 // error handling
 app.use(function(err, req, res, next){
   console.error(err.stack);
