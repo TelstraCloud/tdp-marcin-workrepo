@@ -252,7 +252,7 @@ app.get('/setprime', function (req, res) {
     var lastprimes;
     col.find().sort({date:-1}).limit(10).toArray(function(err, docs) {
       lastprimes = docs;  
-    };
+    });
     console.log("lastprimes: " + JSON.stringify(lastprimes,null,4));
     //col.count(function(err, count){
     //  res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
