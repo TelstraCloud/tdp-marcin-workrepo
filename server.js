@@ -246,10 +246,9 @@ app.get('/setprime', function (req, res) {
   if (db) {
     var col = db.collection('primes');
     
-    // Create a document with request IP and current time of request
+    // Create a document with rcurrent time of request and the prime number
     col.insert({date: Date.now(), n});
 
-    var lastprimes;
     col.find().sort({date:-1}).limit(10).toArray(function(err, docs) {
       if (err) { console.log("db error: " + err); res.send('{"primes" : 0}');}
       console.log("docs: " + JSON.stringify(docs,null,4));
@@ -265,17 +264,6 @@ app.get('/setprime', function (req, res) {
     res.send('{"primes" : 0}');
   }
 
-
-  if (!db) {
-    initDb(function(err){});
-  }
-  if (db) {
-    db.collection('counts').count(function(err, count ){
-      res.send('{"pageCount": ' + count + '}');
-    });
-  } else {
-    res.send('{"pageCount": -1 }');
-  }
 });
 
 
