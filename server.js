@@ -281,7 +281,7 @@ app.get('/getprimes', function (req, res) {
     col.find().sort({date:-1}).limit(n).toArray(function(err, docs) {
       if (err) { console.log("db error: " + err); res.send('[]');}
       console.log("docs: " + JSON.stringify(docs,null,4));
-      var arr;
+      var arr = [];
       for (i=0;i<docs.length;i++) {arr.push(docs[i].n)}
        
       res.send(JSON.stringify(arr,null,4));
