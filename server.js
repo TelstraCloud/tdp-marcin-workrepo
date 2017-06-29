@@ -135,7 +135,7 @@ var calcPrimes = function(n) {
   return { countPrimes:countprimes,totalTime:totalt};
 }
 
-var getK8SInfo = function() {
+function getK8SInfo() {
 // connect to the API server
 
   const core = new Api.Core({
@@ -163,8 +163,6 @@ var getK8SInfo = function() {
     return JSON.stringify(result);
       
     }
-  });
-  
 }
 
 app.get('/', function (req, res) {
@@ -175,7 +173,7 @@ app.get('/', function (req, res) {
   }
   if (db) {
     var col = db.collection('counts');
-    var k = getK8SInfo();
+    //var k = getK8SInfo();
     //console.log('k = ' + JSON.stringify(k));
     // Create a document with request IP and current time of request
     col.insert({ip: req.ip, date: Date.now()});
